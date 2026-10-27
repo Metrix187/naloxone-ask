@@ -111,6 +111,8 @@ npm run smoke            # live probes; prints latency, tokens and exact $ per p
 npm run check:links      # every link in the dataset
 ```
 
+The demo video is rendered by a script, not edited by hand. `npm run video` starts the app in live mode, has headless Chrome drive it the way a person would (the typing is scripted, the answers are real), records the screen, adds an ElevenLabs voiceover (`ELEVENLABS_API_KEY` in `.env.local`, a paid plan for commercial use), and writes `video/out/demo.mp4` plus `demo.srt` captions. Scenes and lines are in [video/narration.mjs](video/narration.mjs). The render refuses to finish if any answer came from the fallback instead of the live model, and it checks every answer's model ID is Standard mode. `--windows-voice` uses the built-in Windows voice for a free test render.
+
 Deploying (Vercel-style serverless): `api/ask.js` is the function and `public/` is static. Set `MODEL_API_KEY` in the host's environment settings. The key is never sent to the browser.
 
 ## Cost accounting

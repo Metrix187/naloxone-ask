@@ -7,3 +7,5 @@ node_modules/
 .spend-ledger.json
 tests/results/*.local.json
 .vercel/
+# demo video renders (voice lines, frames, mp4)
+video/out/
