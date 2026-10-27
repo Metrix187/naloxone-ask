@@ -82,8 +82,38 @@ function windowsVoice(i) {
   return file;
 }
 
+const seconds = (file) => Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', file]).toString().trim());
+// Splits only where a sentence mark is followed by a space, so "narcan.delivery" and "1.3" stay whole.
+const sentences = (s) => s.split(/(?<=[.!?]["”’]?)\s+/);
+
+// One caption per sentence. With ElevenLabs' character timestamps each caption
+// starts when its sentence is spoken; otherwise it is timed by its share of the line.
+function captionCues(s, dur, align) {
+  const shown = sentences(s.vo);
+  const spoken = sentences(say(s));
+  if (align && align.character_start_times_seconds.length === say(s).length && spoken.length === shown.length) {
+    let pos = 0;
+    return spoken.map((p, k) => {
+      const at = say(s).indexOf(p, pos);
+      pos = at + p.length;
+      return { at: align.character_start_times_seconds[at], end: align.character_end_times_seconds[pos - 1], text: shown[k] };
+    });
+  }
+  const chars = shown.reduce((a, p) => a + p.length, 0);
+  let at = 0;
+  return shown.map((p) => {
+    const cue = { at, end: at + (p.length / chars) * dur, text: p };
+    at = cue.end;
+    return cue;
+  });
+}
+
 async function tts(i) {
-  if (args.has('--windows-voice')) return windowsVoice(i);
+  if (args.has('--windows-voice')) {
+    const file = windowsVoice(i);
+    const dur = seconds(file);
+    return { file, dur, cues: captionCues(SCENES[i], dur, null) };
+  }
   const text = say(SCENES[i]);
   const body = {
     text, model_id: TTS_MODEL, voice_settings: VOICE_SETTINGS,
@@ -92,30 +122,38 @@ async function tts(i) {
     next_text: SCENES[i + 1] ? say(SCENES[i + 1]) : undefined,
   };
   const key = createHash('sha256').update(JSON.stringify([VOICE, body])).digest('hex').slice(0, 16);
-  const file = join(AUDIO, `${SCENES[i].id}-${key}.mp3`);
-  if (!existsSync(file)) {
-    const res = await xi(`/text-to-speech/${VOICE}?output_format=mp3_44100_128`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'audio/mpeg' }, body: JSON.stringify(body),
+  const base = join(AUDIO, `${SCENES[i].id}-${key}`);
+  if (!existsSync(`${base}.json`)) {
+    const res = await xi(`/text-to-speech/${VOICE}/with-timestamps?output_format=mp3_44100_128`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
     });
-    writeFileSync(file, Buffer.from(await res.arrayBuffer()));
+    const j = await res.json();
+    writeFileSync(`${base}.mp3`, Buffer.from(j.audio_base64, 'base64'));
+    writeFileSync(`${base}.json`, JSON.stringify(j.alignment));
     billedChars += text.length;
   }
-  return file;
+  const align = JSON.parse(readFileSync(`${base}.json`, 'utf8'));
+  // Cut shortly after the last spoken letter. The next line, sent as context, sometimes
+  // leaves a short blip of itself at the very end of the audio, and the final "." is
+  // timed to stretch over it, so punctuation can't mark the end.
+  let k = align.characters.length - 1;
+  while (k > 0 && !/[\p{L}\p{N}]/u.test(align.characters[k])) k--;
+  const dur = Math.min(align.character_end_times_seconds[k] + 0.25, align.character_end_times_seconds.at(-1));
+  const file = `${base}.trim.wav`;
+  if (!existsSync(file)) {
+    execFileSync('ffmpeg', ['-y', '-v', 'error', '-i', `${base}.mp3`, '-af', `atrim=0:${dur.toFixed(3)},afade=t=out:st=${(dur - 0.06).toFixed(3)}:d=0.06`, file]);
+  }
+  return { file, dur, cues: captionCues(SCENES[i], dur, align) };
 }
 
-const seconds = (file) => Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', file]).toString().trim());
-
 if (args.has('--sample')) {
-  const file = await tts(0);
-  console.log(`sample: ${file} (${seconds(file).toFixed(1)} s, ${billedChars} characters billed)`);
+  const line = await tts(0);
+  console.log(`sample: ${line.file} (${line.dur.toFixed(1)} s, ${billedChars} characters billed)`);
   process.exit(0);
 }
 
 const lines = [];
-for (let i = 0; i < SCENES.length; i++) {
-  const file = await tts(i);
-  lines.push({ file, dur: seconds(file) });
-}
+for (let i = 0; i < SCENES.length; i++) lines.push(await tts(i));
 const voiceTotal = lines.reduce((a, l) => a + l.dur + LEAD + GAP, 0);
 for (const [i, l] of lines.entries()) console.log(`${SCENES[i].id.padEnd(10)} ${l.dur.toFixed(1).padStart(5)} s`);
 console.log(`voice ≈ ${voiceTotal.toFixed(1)} s before waiting on live answers · ElevenLabs characters billed this run: ${billedChars}`);
@@ -275,19 +313,10 @@ const cues = [];
 for (const [i, s] of SCENES.entries()) {
   await evaluate(`stage.scene(${JSON.stringify(s.scene)}, ${JSON.stringify(s.label || '')})`);
   const t = Date.now() / 1000;
-  // One caption per sentence, timed by its share of the line. Splits only where
-  // a sentence mark is followed by a space, so "narcan.delivery" and "1.3" stay whole.
-  const parts = s.vo.split(/(?<=[.!?]["”’]?)\s+/);
-  const chars = parts.reduce((a, p) => a + p.length, 0);
-  const sceneCues = [];
-  let at = LEAD;
-  for (const p of parts) {
-    sceneCues.push({ at, text: p });
-    at += (p.length / chars) * lines[i].dur;
-  }
-  await evaluate(`stage.captions(${JSON.stringify(sceneCues)})`);
+  const lag = Date.now() / 1000 - t;
+  await evaluate(`stage.captions(${JSON.stringify(lines[i].cues.map((c) => ({ at: Math.max(0, LEAD + c.at - lag), text: c.text })))})`);
   starts.push(t + LEAD);
-  cues.push(...sceneCues.map((c, k) => ({ start: t + c.at, end: t + (sceneCues[k + 1]?.at ?? LEAD + lines[i].dur), text: c.text })));
+  cues.push(...lines[i].cues.map((c) => ({ start: t + LEAD + c.at, end: t + LEAD + c.end, text: c.text })));
   await Promise.all([sleep((LEAD + lines[i].dur + GAP) * 1000), s.run ? s.run(appProxy) : null]);
   console.log(`recorded ${s.id}`);
 }
