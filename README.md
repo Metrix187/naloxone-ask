@@ -150,6 +150,10 @@ Bugs the live runs found, all fixed and covered by unit tests and smoke checks:
 
 [narcan.delivery](https://narcan.delivery) `data.json` (CC0 public domain). 50 states: legal status, Good Samaritan law scope, pharmacy access, Medicaid notes, community programs, free mail-order programs and sources. Copied unchanged into `data/`. Links are checked with `npm run check:links` (2026-10-27: 132 links, 130 OK, 2 bot-blocked that load in a browser, 0 dead).
 
+## License
+
+Code: [MIT](LICENSE). Data in `data/`: CC0 public domain, from narcan.delivery.
+
 ## Background
 
 Built by Skyler Ulrich (Slateweir Works LLC / Quantara), who also released [Llama-Quantara-Sentinel-8B](https://huggingface.co/skyuu72/Llama-Quantara-Sentinel-8B), an open-weights defensive-security model whose safety claims are *measured, not assumed*. This project follows the same rule. "Never invents a source" and "911 comes first" are tested guarantees (`npm test`, `npm run smoke`), not hopes.
