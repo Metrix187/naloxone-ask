@@ -4,6 +4,8 @@
 
 Built for the Meta Global AI Developer Hackathon (Indie Developer track, *Build for Your World*) on **Meta Muse Spark 1.3** through **Meta Model API**, in **Standard mode only**.
 
+**Try it live: [naloxone-ask.vercel.app](https://naloxone-ask.vercel.app)** · [2:34 demo video](https://youtu.be/GVZlOqJqWVA)
+
 > If someone is not breathing or won't wake up, **call 911**. Crisis line: **988**. Using alone: **Never Use Alone, 800-484-3731**.
 
 ---
