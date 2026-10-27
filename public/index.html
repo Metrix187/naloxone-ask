@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#FBF9F5">
+  <title>Ask: Naloxone Finder</title>
+  <meta name="description" content="Tell us where you are in your own words. Get verified free and low-cost naloxone options. No account, nothing stored.">
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <a class="skip" href="#q">Skip to the question box</a>
+
+  <div id="emergency" class="emergency" hidden role="alert">
+    <strong>If someone won't wake up or isn't breathing, call 911 now.</strong>
+    <a class="btn btn-911" href="tel:911">Call 911</a>
+  </div>
+
+  <header class="top">
+    <h1>Find naloxone</h1>
+    <p class="lede">Say where you are in your own words, like a street, a landmark or a town. You'll get verified free and low-cost options.</p>
+  </header>
+
+  <main id="log" class="log" aria-live="polite">
+    <section class="starter" id="starter">
+      <p class="hint">Try one:</p>
+      <button class="chip" type="button" data-example>I'm in Ohio, where's free Narcan near me tonight?</button>
+      <button class="chip" type="button" data-example>near the mcdonalds on franklin st in johnstown</button>
+      <button class="chip" type="button" data-example>¿Dónde consigo naloxona gratis en Texas?</button>
+    </section>
+  </main>
+
+  <form id="ask" class="ask" autocomplete="off">
+    <div id="photo-preview" class="photo-preview" hidden>
+      <img alt="Photo to send">
+      <button type="button" class="link" id="photo-remove">Remove photo</button>
+    </div>
+    <div class="row">
+      <label class="photo-btn" title="Add a photo of a street sign">
+        <input type="file" id="photo" accept="image/*" capture="environment" hidden>
+        <span aria-hidden="true">📷</span><span class="sr">Add a photo of a street sign</span>
+      </label>
+      <label for="q" class="sr">Where are you?</label>
+      <textarea id="q" rows="1" maxlength="500" placeholder="Where are you?" enterkeyhint="send"></textarea>
+      <button class="btn btn-send" type="submit">Ask</button>
+    </div>
+    <details class="privacy">
+      <summary>Private: no account, nothing stored. <span class="link">What's sent?</span></summary>
+      <p>Your question (and a photo, if you add one) goes from our server to Meta's Muse Spark model on Meta Model API in <b>Standard mode</b>. Meta says Standard mode content is not used to train its models. We use Meta's stateless Chat Completions endpoint, which Meta documents as not keeping conversation state between requests.</p>
+      <p>narcan.delivery stores nothing: no database, no cookies, no analytics. Our server log records only timing, token counts and cost, never your words. The conversation lives in this tab and is gone when you close it. Photos are resized in your browser first, which also strips location metadata.</p>
+      <p>To stop abuse, your IP address is kept in memory for one minute to count requests, and it's never written down. Our hosting provider may keep standard access logs (IP and time, not your question). We don't control Meta's own operational logging. See Meta's terms. Tapping a "Pharmacies near…" link opens Google Maps with that place phrase.</p>
+      <button type="button" class="link" id="clear">Clear this conversation</button>
+    </details>
+  </form>
+
+  <footer class="crisis" aria-label="Crisis lines">
+    <a href="tel:911"><b>911</b><span>Overdose</span></a>
+    <a href="tel:988"><b>988</b><span>Crisis line</span></a>
+    <a href="tel:8004843731"><b>800-484-3731</b><span>Using alone</span></a>
+  </footer>
+
+  <template id="tpl-card">
+    <article class="card">
+      <span class="kind"></span>
+      <h3 class="name"></h3>
+      <p class="detail"></p>
+      <div class="actions"></div>
+    </article>
+  </template>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

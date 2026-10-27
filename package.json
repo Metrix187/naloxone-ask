@@ -1,0 +1,16 @@
+{
+  "name": "naloxone-ask",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Conversational naloxone finder for narcan.delivery, built on Meta Muse Spark (Standard mode) via Meta Model API.",
+  "type": "module",
+  "engines": { "node": ">=22.9" },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env.local server.js",
+    "offline": "node --env-file-if-exists=.env.local -e \"process.env.FORCE_OFFLINE='1'; await import('./server.js')\"",
+    "test": "node --test tests/unit.test.mjs",
+    "smoke": "node --env-file-if-exists=.env.local tests/smoke.mjs",
+    "build:data": "node scripts/build-public-data.mjs",
+    "check:links": "node scripts/check-links.mjs"
+  }
+}
