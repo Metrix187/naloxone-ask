@@ -1,0 +1,80 @@
+{
+  "model": "muse-spark-1.3",
+  "reasoning_effort": "low",
+  "total_usd": 0.014754999999999999,
+  "results": [
+    {
+      "id": "g-photo-pa",
+      "text": "",
+      "pass": true,
+      "notes": [],
+      "state": "PA",
+      "cards": [
+        "PA-mail-1",
+        "PA-community-1",
+        "PA-pharmacy"
+      ],
+      "clarify": [],
+      "maps": "Pharmacies near Franklin St, Johnstown, PA",
+      "message": "You're in Johnstown, Pennsylvania. Free mail and community options are listed below. You can also get it at pharmacies without a prescription.",
+      "guard": {
+        "removed": [],
+        "dropped_ids": []
+      },
+      "meta": {
+        "model": "muse-spark-1.3",
+        "calls": 2,
+        "trace": [
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "PA"
+            },
+            "found": true
+          },
+          {
+            "tool": "respond"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 5272,
+          "cached_tokens": 0,
+          "completion_tokens": 569
+        },
+        "cost_usd": 0.009008249999999999,
+        "latency_ms": 3604
+      }
+    },
+    {
+      "id": "g2-photo-ambiguous",
+      "text": "",
+      "pass": true,
+      "notes": [],
+      "state": null,
+      "cards": [],
+      "clarify": [],
+      "maps": null,
+      "message": "I see Franklin St in your photo, but that street is in many states so I can't tell where you are. Which state are you in so I can find naloxone options for you?",
+      "guard": {
+        "removed": [],
+        "dropped_ids": []
+      },
+      "meta": {
+        "model": "muse-spark-1.3",
+        "calls": 1,
+        "trace": [
+          {
+            "tool": "respond"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2316,
+          "cached_tokens": 0,
+          "completion_tokens": 671
+        },
+        "cost_usd": 0.00574675,
+        "latency_ms": 2060
+      }
+    }
+  ]
+}

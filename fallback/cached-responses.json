@@ -3,9 +3,9 @@
   "entries": [
     {
       "prompt": "near the mcdonalds on franklin st in johnstown",
-      "recorded_at": "2026-10-27T10:01:58.348Z",
+      "recorded_at": "2026-10-27T10:16:49.155Z",
       "answer": {
-        "message": "I found a few Johnstowns, so I'm showing Pennsylvania first as the most likely. Tap your state below if that's wrong. Hours aren't listed, so please call ahead and use the map for pharmacies near Franklin St.",
+        "message": "There are a few places called Johnstown, so I listed free options for Johnstown, PA below. Hours are not listed, so call ahead. If you're in another state, tap the right one below.",
         "state": {
           "name": "Pennsylvania",
           "abbreviation": "PA",
@@ -95,20 +95,20 @@
             }
           ],
           "usage": {
-            "prompt_tokens": 4575,
-            "cached_tokens": 0,
-            "completion_tokens": 865
+            "prompt_tokens": 4689,
+            "cached_tokens": 3042,
+            "completion_tokens": 841
           },
-          "cost_usd": 0.009395,
-          "latency_ms": 3638
+          "cost_usd": 0.006089299999999999,
+          "latency_ms": 3056
         }
       }
     },
     {
       "prompt": "I'm in Ohio, where's free Narcan near me tonight?",
-      "recorded_at": "2026-10-27T10:02:07.582Z",
+      "recorded_at": "2026-10-27T10:17:00.554Z",
       "answer": {
-        "message": "I found free options in Ohio for you. Hours aren't listed, so call ahead to check availability for tonight. Pharmacies can also provide it without a prescription.",
+        "message": "Free options are listed below, including Project DAWN sites statewide. Hours are not listed, so call ahead to confirm for tonight. Pharmacies can also dispense without a prescription, and mail order is free.",
         "state": {
           "name": "Ohio",
           "abbreviation": "OH",
@@ -131,22 +131,25 @@
             "website": "https://odh.ohio.gov/know-our-programs/project-dawn/"
           },
           {
-            "id": "OH-mail-1",
-            "kind": "mail",
-            "name": "Harm Reduction Ohio",
-            "cost": "Free",
-            "website": "https://nextdistro.org/hro"
-          },
-          {
             "id": "OH-pharmacy",
             "kind": "pharmacy",
             "name": "Pharmacy (no prescription needed in most cases)",
             "mechanism": "Pharmacy protocol, no prescription.",
             "typical_cost": "OTC ~$45",
             "medicaid": "Covered."
+          },
+          {
+            "id": "OH-mail-1",
+            "kind": "mail",
+            "name": "Harm Reduction Ohio",
+            "cost": "Free",
+            "website": "https://nextdistro.org/hro"
           }
         ],
-        "maps": null,
+        "maps": {
+          "label": "Pharmacies near you",
+          "url": "https://www.google.com/maps/search/?api=1&query=pharmacy%20near%20me"
+        },
         "clarify": [],
         "out_of_coverage": false,
         "guard": {
@@ -169,20 +172,20 @@
             }
           ],
           "usage": {
-            "prompt_tokens": 3541,
-            "cached_tokens": 113,
-            "completion_tokens": 530
+            "prompt_tokens": 3656,
+            "cached_tokens": 3042,
+            "completion_tokens": 739
           },
-          "cost_usd": 0.00655445,
-          "latency_ms": 2282
+          "cost_usd": 0.00436455,
+          "latency_ms": 2513
         }
       }
     },
     {
       "prompt": "¿Dónde consigo naloxona gratis en Texas?",
-      "recorded_at": "2026-10-27T10:02:14.872Z",
+      "recorded_at": "2026-10-27T10:17:14.171Z",
       "answer": {
-        "message": "En Texas puedes conseguir naloxona gratis por correo y en programas comunitarios. Toca una opción para ver cómo pedirla y llama antes para confirmar. Si es una emergencia por sobredosis, llama al 911.",
+        "message": "En Texas puedes pedir naloxona gratis por correo o recogerla en programas comunitarios. Tienes opciones gratuitas listadas abajo. Llama antes para confirmar disponibilidad.",
         "state": {
           "name": "Texas",
           "abbreviation": "TX",
@@ -218,7 +221,10 @@
             "website": "https://txopioidresponse.org/"
           }
         ],
-        "maps": null,
+        "maps": {
+          "label": "Pharmacies near you",
+          "url": "https://www.google.com/maps/search/?api=1&query=pharmacy%20near%20me"
+        },
         "clarify": [],
         "out_of_coverage": false,
         "guard": {
@@ -241,12 +247,12 @@
             }
           ],
           "usage": {
-            "prompt_tokens": 3524,
-            "cached_tokens": 1393,
-            "completion_tokens": 626
+            "prompt_tokens": 3640,
+            "cached_tokens": 3042,
+            "completion_tokens": 747
           },
-          "cost_usd": 0.005533199999999999,
-          "latency_ms": 2157
+          "cost_usd": 0.00437855,
+          "latency_ms": 2458
         }
       }
     }

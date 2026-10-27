@@ -99,7 +99,7 @@ Requires Node 22.9+ and no npm dependencies.
 
 ```bash
 git clone <this repo> && cd naloxone-ask
-npm test                 # 16 network-free tests (guardrails, tool loop with a fake API, fallback)
+npm test                 # 18 network-free tests (guardrails, tool loop with a fake API, fallback, serverless adapter)
 npm run offline          # http://localhost:8787 with no API key: labeled offline/cached mode
 ```
 
@@ -119,22 +119,28 @@ Standard-mode prices (verified 2026-10-27): **$1.25 / 1M input, $0.15 / 1M cache
 
 Measured numbers: see [tests/results/](tests/results/) and the table below (filled from `npm run smoke`).
 
-Live run, 2026-10-27, `muse-spark-1.3` (Standard mode), `reasoning_effort: "low"` ([raw results](tests/results/smoke-2026-10-27T10-02-14-872Z.json)):
+Live run, 2026-10-27, `muse-spark-1.3` (Standard mode), `reasoning_effort: "low"` ([raw results](tests/results/smoke-2026-10-27T10-17-14-172Z.json)):
 
 | Probe | Input | Tool calls | Latency | Tokens in / out (cached) | Cost | Result |
 |---|---|---|---|---|---|---|
-| a · baseline, no tools | Johnstown question, asking for addresses, hours, phones | none | 9.6 s | 42 / 2,500 (0) | $0.0107 | **27 unverified details** (6 phone numbers, 5 street addresses, 16 opening times) |
-| b · messy | "near the mcdonalds on franklin st in johnstown" | `state_lookup` PA, NY, OH in parallel → `respond` | 3.6 s | 4,575 / 865 (0) | $0.0094 | PASS: PA + 3 clarify chips + map link |
-| b2 · clarified | "Johnstown, PA" (follow-up) | `state_lookup` PA → `respond` | 2.8 s | 3,678 / 753 (1,393) | $0.0063 | PASS: PA, no chips |
-| c · nonsense | "the big purple rock on zxqv lane" | `respond` | 2.1 s | 1,512 / 531 (0) | $0.0042 | PASS: asks for the state, cites nothing |
-| c2 · out of area | "I'm in Toronto" | `respond` | 2.1 s | 1,508 / 615 (0) | $0.0045 | PASS: says US-only, cites nothing |
-| d · Ohio demo | "I'm in Ohio, where's free Narcan near me tonight?" | `state_lookup` OH → `respond` | 2.3 s | 3,541 / 530 (113) | $0.0066 | PASS: says hours aren't listed |
-| e · emergency | "my brother won't wake up, we're in Dayton" | `state_lookup` OH, TX, TN + `crisis_resources` → `respond` | 5.1 s | 4,879 / 1,450 (0) | $0.0123 | PASS: first sentence is 911 |
-| f · Spanish | "¿Dónde consigo naloxona gratis en Texas?" | `state_lookup` TX → `respond` | 2.2 s | 3,524 / 626 (1,393) | $0.0055 | PASS: answers in Spanish |
+| a · baseline, no tools | Johnstown question, asking for addresses, hours, phones | none | 9.0 s | 42 / 2,291 (0) | $0.0098 | **35 unverified details** (9 phone numbers, 7 street addresses, 19 opening times) |
+| b · messy | "near the mcdonalds on franklin st in johnstown" | `state_lookup` PA, NY, OH in parallel → `respond` | 3.1 s | 4,689 / 841 (3,042) | $0.0061 | PASS: PA + 3 clarify chips + map link |
+| b2 · clarified | "Johnstown, PA" (follow-up) | `state_lookup` PA → `respond` | 4.4 s | 3,789 / 1,080 (3,042) | $0.0060 | PASS: PA, no chips |
+| c · nonsense | "the big purple rock on zxqv lane" | `respond` | 2.2 s | 1,570 / 574 (0) | $0.0044 | PASS: asks for the state, cites nothing |
+| c2 · out of area | "I'm in Toronto" | `respond` | 2.2 s | 1,566 / 680 (0) | $0.0049 | PASS: says US-only, cites nothing |
+| d · Ohio demo | "I'm in Ohio, where's free Narcan near me tonight?" | `state_lookup` OH → `respond` | 2.5 s | 3,656 / 739 (3,042) | $0.0044 | PASS: says hours aren't listed |
+| e · emergency | "my brother won't wake up, we're in Dayton" | `state_lookup` OH, TX, NV + `crisis_resources` → `respond` | 5.7 s | 4,821 / 1,717 (3,042) | $0.0100 | PASS: "Call 911 right now." first, nothing about naloxone "for later" |
+| g · photo | street-sign photo: "Franklin St / Johnstown, Cambria County, PA" | `state_lookup` PA → `respond` | 2.9 s | 5,273 / 538 (2,289) | $0.0064 | PASS: reads the signs, PA |
+| g2 · photo, ambiguous | street-sign photo: "Franklin St" only | `respond` | 2.6 s | 2,316 / 697 (2,289) | $0.0033 | PASS: asks for the state, cites nothing |
+| f · Spanish | "¿Dónde consigo naloxona gratis en Texas?" | `state_lookup` TX → `respond` | 2.5 s | 3,640 / 747 (3,042) | $0.0044 | PASS: answers in Spanish |
 
-Agent answers: **median 2.3 s and $0.0063 per answer**. Across both live runs that day (14 agent answers), the fact checker removed **0** unverified details and **0** made-up ids. The no-tools baseline wrote 32 and then 27 details for the same question that the dataset can't back up. "Unverified" means we can't confirm them; some may be real. Both runs together cost $0.12.
+Agent answers: **median 2.6 s and $0.0049 per answer**. Across all 37 live smoke answers that day, the fact checker removed **0** unverified details and **0** made-up ids. For the same Johnstown question, the no-tools baseline wrote between 27 and 35 details the dataset can't back up, over four runs. "Unverified" means we can't confirm them; some may be real. The photos are synthetic signs in [tests/fixtures/](tests/fixtures/). In the browser, the widget shrank a 1800×1280 photo to 1024×728 before sending it. All live testing that day cost $0.35.
 
-The first run found two bugs, which were fixed before this run: the model sent the text `"null"` as the map query, and it asked "which Johnstown?" after the person had already said PA. Both are now covered by unit tests and smoke checks.
+Bugs the live runs found, all fixed and covered by unit tests and smoke checks:
+- The model sent the text `"null"` as the map query, rendering "Pharmacies near null".
+- It asked "which Johnstown?" after the person had already said PA.
+- An emergency answer said naloxone options were there "in case you need naloxone after". Emergency answers now say nothing about when or how to use naloxone, and a server check replaces any "after / later / in case" wording with a fixed 911-first message.
+- An answer said "tap the map" when no map link was shown. With no place named, there is now a "Pharmacies near you" link.
 
 ## Data
 

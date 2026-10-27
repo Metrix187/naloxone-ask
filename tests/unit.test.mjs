@@ -68,12 +68,13 @@ test('buildAnswer drops ids from states the tools never returned', () => {
   assert.deepEqual(a.clarify, [{ label: 'Johnstown, NY', state: 'NY' }]);
 });
 
-test('buildAnswer: no "null" map link, no clarify chips once the state is named', () => {
+test('buildAnswer: "null" map query falls back to near-you, no clarify chips once the state is named', () => {
   const a = buildAnswer(
     { message: 'ok', state: 'PA', highlight_ids: ['PA-mail-1'], maps_query: 'null', clarify_options: [{ label: 'Johnstown, NY', state: 'NY' }], out_of_coverage: false },
     { lookedUp: new Set(['PA', 'NY']), userText: 'Johnstown, PA' },
   );
-  assert.equal(a.maps, null);
+  assert.equal(a.maps.label, 'Pharmacies near you');
+  assert.match(a.maps.url, /query=pharmacy%20near%20me$/);
   assert.deepEqual(a.clarify, []);
 });
 
@@ -106,6 +107,19 @@ test('emergency answers always open with 911', async () => {
   const r = await handleAsk({ text: "my friend isnt breathing, we're in Altoona PA" }, { env: { FORCE_OFFLINE: '1' } });
   assert.equal(r.json.emergency, true);
   assert.match(r.json.message, /^Call 911 now/);
+});
+
+test('emergency answers never frame naloxone as something for later', () => {
+  const said = 'Call 911 right now. I listed free Dayton, Ohio options below in case you need naloxone after.';
+  const a = buildAnswer({ message: said, state: 'OH', highlight_ids: ['OH-community-1'] }, { lookedUp: new Set(['OH']), userText: "my brother won't wake up, we're in Dayton" });
+  assert.match(a.message, /^Call 911 now\./);
+  assert.doesNotMatch(a.message, /after|in case/i);
+  assert.deepEqual(a.guard.removed.map((r) => r.kind), ['timing']);
+  const es = buildAnswer({ message: 'Llama al 911. Pide naloxona para después.', state: 'TX', highlight_ids: [] }, { lookedUp: new Set(['TX']), userText: 'mi amigo no responde, estamos en Houston' });
+  assert.match(es.message, /^Llama al 911 ahora\./);
+  // Outside an emergency the same words are fine.
+  const calm = buildAnswer({ message: 'Order a free kit to keep on hand.', state: 'OH', highlight_ids: [] }, { lookedUp: new Set(['OH']), userText: 'free naloxone in Ohio' });
+  assert.equal(calm.message, 'Order a free kit to keep on hand.');
 });
 
 test('fallback with no state asks for one and cites nothing', () => {
@@ -182,5 +196,33 @@ test('handler falls back when the API errors, and never on a tier violation', as
     await assert.rejects(handleAsk({ text: 'hi' }, { env: { MODEL_API_KEY: 'x', MUSE_MODEL: 'muse-spark-1.3-contributor' } }), /Refusing/);
   } finally {
     globalThis.fetch = real;
+  }
+});
+
+test('serverless adapter answers with a parsed body or a raw stream', async () => {
+  const { default: ask } = await import('../api/ask.js');
+  const { Readable } = await import('node:stream');
+  const fakeRes = () => ({ statusCode: 0, headers: {}, out: '', setHeader(k, v) { this.headers[k] = v; }, end(s = '') { this.out = s; } });
+  const prev = process.env.FORCE_OFFLINE;
+  process.env.FORCE_OFFLINE = '1';
+  try {
+    const parsed = fakeRes();
+    await ask({ method: 'POST', headers: {}, body: { text: 'free naloxone in Ohio' } }, parsed);
+    assert.equal(parsed.statusCode, 200);
+    assert.equal(JSON.parse(parsed.out).state.abbreviation, 'OH');
+    assert.equal(parsed.headers['Cache-Control'], 'no-store');
+
+    const streamed = fakeRes();
+    const req = Object.assign(Readable.from([JSON.stringify({ text: 'free naloxone in Ohio' })]), { method: 'POST', headers: { 'x-forwarded-for': '203.0.113.9, 10.0.0.1' } });
+    await ask(req, streamed);
+    assert.equal(streamed.statusCode, 200);
+    assert.equal(JSON.parse(streamed.out).state.abbreviation, 'OH');
+
+    const get = fakeRes();
+    await ask({ method: 'GET', headers: {} }, get);
+    assert.equal(get.statusCode, 405);
+  } finally {
+    if (prev === undefined) delete process.env.FORCE_OFFLINE;
+    else process.env.FORCE_OFFLINE = prev;
   }
 });

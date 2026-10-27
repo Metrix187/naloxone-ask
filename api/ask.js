@@ -9,7 +9,19 @@ export default async function ask(req, res) {
     return res.end();
   }
   try {
-    const body = typeof req.body === 'object' && req.body ? req.body : JSON.parse(req.body || '{}');
+    // Vercel usually parses JSON into req.body; if not, read the raw stream (capped).
+    let raw = req.body;
+    if (raw === undefined) {
+      raw = '';
+      for await (const chunk of req) {
+        raw += chunk;
+        if (raw.length > 2_200_000) {
+          res.statusCode = 413;
+          return res.end();
+        }
+      }
+    }
+    const body = typeof raw === 'object' && raw ? raw : JSON.parse(raw || '{}');
     const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
     const { status, json } = await handleAsk(body, { ip });
     res.statusCode = status;

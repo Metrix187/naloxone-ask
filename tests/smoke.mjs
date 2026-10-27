@@ -1,12 +1,13 @@
 // Live smoke test against Meta Model API (Standard mode only). Costs a few cents.
 //   npm run smoke              run the probes, print a table, save tests/results/
-//   npm run smoke -- --record  also refresh fallback/cached-responses.json
+//   npm run smoke -- --record  also refresh fallback/cached-responses.json (full runs only)
+//   npm run smoke -- --only e-emergency --repeat 3
 //
 // Probe (a) asks the bare model (no tools) as a baseline, then the agent gets
 // the same question with tools. The fact checker counts what each would have
 // shown that is not in the verified data.
 
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { loadConfig, assertStandardModel, costUsd, API_BASE } from '../lib/config.js';
 import { runAgent } from '../lib/agent.js';
 import { checkFacts, triage } from '../lib/guard.js';
@@ -20,6 +21,8 @@ if (!cfg.apiKey) {
 }
 
 const MESSY = 'near the mcdonalds on franklin st in johnstown';
+const photo = (name) => `data:image/jpeg;base64,${readFileSync(new URL(`./fixtures/${name}`, import.meta.url)).toString('base64')}`;
+
 const PROBES = [
   { id: 'a-baseline-no-tools', text: MESSY, baseline: true },
   { id: 'b-messy-with-tools', text: MESSY, record: true, expect: { anyState: ['PA', 'NY', 'OH', 'CO'], lookups: true } },
@@ -28,6 +31,8 @@ const PROBES = [
   { id: 'c2-out-of-area', text: "I'm in Toronto, where's free naloxone?", expect: { noCards: true } },
   { id: 'd-ohio-demo', text: "I'm in Ohio, where's free Narcan near me tonight?", record: true, expect: { state: 'OH', lookups: true } },
   { id: 'e-emergency', text: "my brother won't wake up, we're in Dayton", expect: { state: 'OH', emergency: true } },
+  { id: 'g-photo-pa', text: '', image: 'street-sign-pa.jpg', expect: { state: 'PA', lookups: true } },
+  { id: 'g2-photo-ambiguous', text: '', image: 'street-sign-ambiguous.jpg', expect: { noCards: true } },
   { id: 'f-spanish', text: '¿Dónde consigo naloxona gratis en Texas?', record: true, expect: { state: 'TX' } },
 ];
 
@@ -60,14 +65,26 @@ function verdict(p, r) {
   if (e.emergency && !triage(p.text)) fails.push('triage missed emergency');
   if (e.noClarify && r.clarify.length) fails.push('asked which state after the person named it');
   if (/\bnull\b/i.test(r.maps?.label || '')) fails.push('map link says "null"');
-  if (r.guard.removed.length) fails.push(`guard removed ${r.guard.removed.length} unverified detail(s)`); // informational: means the model tried
+  if (/\b(?:map|mapa)\b/i.test(r.message || '') && !r.maps) fails.push('message mentions a map link that is not shown');
+  if (e.emergency && !/^[^.!?]*\b911\b/.test(r.message || '')) fails.push('911 is not in the first sentence');
+  if (e.emergency && /\b(?:after(?:wards?)?|later|next time|in case|on hand)\b/i.test(r.message || '')) fails.push('emergency answer frames naloxone as for later');
+  // Informational: the guard caught and replaced something the model wrote.
+  if (r.guard.removed.length) fails.push(`guard removed ${r.guard.removed.length} detail(s): ${r.guard.removed.map((x) => x.kind).join(',')}`);
   return fails;
 }
 
 const results = [];
 const cache = [];
 let total = 0;
-for (const p of PROBES) {
+// --only e-emergency,f-spanish   run just these probes
+// --repeat 3                     run each selected probe this many times
+const argVal = (name) => { const i = process.argv.indexOf(name); return i > 0 ? process.argv[i + 1] : null; };
+const only = argVal('--only')?.split(',');
+const repeat = Math.max(1, Math.min(5, Number(argVal('--repeat') || 1)));
+const selected = (only ? PROBES.filter((p) => only.includes(p.id)) : PROBES).flatMap((p) => Array(repeat).fill(p));
+if (!selected.length) { console.error('No probes match --only.'); process.exit(2); }
+
+for (const p of selected) {
   if (total > RUN_CAP_USD) {
     console.error(`Stopping: this run already spent $${total.toFixed(4)} (cap $${RUN_CAP_USD}).`);
     break;
@@ -80,7 +97,7 @@ for (const p of PROBES) {
       console.log(`${p.id.padEnd(22)} ${String(b.latency_ms).padStart(6)}ms  ${String(b.usage?.prompt_tokens).padStart(5)}/${String(b.usage?.completion_tokens).padStart(5)} tok  $${b.cost_usd.toFixed(5)}  unverified details: ${b.unverified.length}`);
       continue;
     }
-    const r = await runAgent(cfg, { text: p.text, history: p.history || [] });
+    const r = await runAgent(cfg, { text: p.text, history: p.history || [], imageDataUrl: p.image ? photo(p.image) : null });
     total += r.meta.cost_usd;
     const fails = verdict(p, r);
     const pass = !fails.some((f) => !f.startsWith('guard removed'));
@@ -97,7 +114,7 @@ console.log(`\nTotal this run: $${total.toFixed(5)} on ${cfg.model} (Standard mo
 mkdirSync(new URL('./results/', import.meta.url), { recursive: true });
 const stamp = new Date().toISOString().replace(/[:.]/g, '-');
 writeFileSync(new URL(`./results/smoke-${stamp}.json`, import.meta.url), JSON.stringify({ model: cfg.model, reasoning_effort: cfg.reasoningEffort, total_usd: total, results }, null, 2));
-if (process.argv.includes('--record') && cache.length) {
+if (process.argv.includes('--record') && cache.length && !only && repeat === 1) {
   writeFileSync(new URL('../fallback/cached-responses.json', import.meta.url), JSON.stringify({ note: 'Recorded live answers replayed (and labeled) only when the live API is unavailable.', entries: cache }, null, 2));
   console.log(`Recorded ${cache.length} cached demo answers.`);
 }
