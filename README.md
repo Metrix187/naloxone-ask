@@ -119,23 +119,23 @@ Standard-mode prices (verified 2026-10-27): **$1.25 / 1M input, $0.15 / 1M cache
 
 Measured numbers: see [tests/results/](tests/results/) and the table below (filled from `npm run smoke`).
 
-Live run, 2026-10-27, `muse-spark-1.3` (Standard mode), `reasoning_effort: "low"` ([raw results](tests/results/smoke-2026-10-27T10-17-14-172Z.json)):
+Final live run, 2026-10-27, `muse-spark-1.3` (Standard mode), `reasoning_effort: "low"`, 10/10 PASS ([raw results](tests/results/smoke-2026-10-27T10-29-43-376Z.json)):
 
 | Probe | Input | Tool calls | Latency | Tokens in / out (cached) | Cost | Result |
 |---|---|---|---|---|---|---|
-| a · baseline, no tools | Johnstown question, asking for addresses, hours, phones | none | 9.0 s | 42 / 2,291 (0) | $0.0098 | **35 unverified details** (9 phone numbers, 7 street addresses, 19 opening times) |
-| b · messy | "near the mcdonalds on franklin st in johnstown" | `state_lookup` PA, NY, OH in parallel → `respond` | 3.1 s | 4,689 / 841 (3,042) | $0.0061 | PASS: PA + 3 clarify chips + map link |
-| b2 · clarified | "Johnstown, PA" (follow-up) | `state_lookup` PA → `respond` | 4.4 s | 3,789 / 1,080 (3,042) | $0.0060 | PASS: PA, no chips |
-| c · nonsense | "the big purple rock on zxqv lane" | `respond` | 2.2 s | 1,570 / 574 (0) | $0.0044 | PASS: asks for the state, cites nothing |
-| c2 · out of area | "I'm in Toronto" | `respond` | 2.2 s | 1,566 / 680 (0) | $0.0049 | PASS: says US-only, cites nothing |
-| d · Ohio demo | "I'm in Ohio, where's free Narcan near me tonight?" | `state_lookup` OH → `respond` | 2.5 s | 3,656 / 739 (3,042) | $0.0044 | PASS: says hours aren't listed |
-| e · emergency | "my brother won't wake up, we're in Dayton" | `state_lookup` OH, TX, NV + `crisis_resources` → `respond` | 5.7 s | 4,821 / 1,717 (3,042) | $0.0100 | PASS: OH + Dayton chips; answer is the fixed 911-first text |
-| e2 · emergency, Spanish (separate run) | "mi amigo no responde, estamos en Houston" | `state_lookup` TX → `respond` | 5.4 s | 3,643 / 1,336 (3,042) | $0.0069 | PASS: TX; fixed Spanish 911-first text |
-| g · photo | street-sign photo: "Franklin St / Johnstown, Cambria County, PA" | `state_lookup` PA → `respond` | 2.9 s | 5,273 / 538 (2,289) | $0.0064 | PASS: reads the signs, PA |
-| g2 · photo, ambiguous | street-sign photo: "Franklin St" only | `respond` | 2.6 s | 2,316 / 697 (2,289) | $0.0033 | PASS: asks for the state, cites nothing |
-| f · Spanish | "¿Dónde consigo naloxona gratis en Texas?" | `state_lookup` TX → `respond` | 2.5 s | 3,640 / 747 (3,042) | $0.0044 | PASS: answers in Spanish |
+| a · baseline, no tools | Johnstown question, asking for addresses, hours, phones | none | 10.0 s | 42 / 2,387 (0) | $0.0102 | **31 unverified details** (7 phone numbers, 6 street addresses, 18 opening times) |
+| b · messy | "near the mcdonalds on franklin st in johnstown" | `state_lookup` Pennsylvania, New York, Ohio in parallel → `respond` | 4.4 s | 4,688 / 915 (1,521) | $0.0081 | PASS: PA + 3 clarify chips + map link |
+| b2 · clarified | "Johnstown, PA" (follow-up) | `state_lookup` PA → `respond` | 3.8 s | 3,792 / 1,007 (3,042) | $0.0057 | PASS: PA, no chips |
+| c · nonsense | "the big purple rock on zxqv lane" | `respond` | 1.9 s | 1,570 / 642 (0) | $0.0047 | PASS: asks for the state, cites nothing |
+| c2 · out of area | "I'm in Toronto" | `respond` | 2.7 s | 1,566 / 864 (1,521) | $0.0040 | PASS: says US-only, cites nothing |
+| d · Ohio demo | "I'm in Ohio, where's free Narcan near me tonight?" | `state_lookup` Ohio → `respond` | 2.9 s | 3,659 / 825 (3,042) | $0.0047 | PASS: says hours aren't listed, "Pharmacies near you" link |
+| e · emergency | "my brother won't wake up, we're in Dayton" | `state_lookup` Ohio, Kentucky, Tennessee in parallel → `respond` | 4.0 s | 4,668 / 1,220 (3,042) | $0.0077 | PASS: OH + Dayton chips; fixed 911-first text |
+| e2 · emergency, Spanish | "mi amigo no responde, estamos en Houston" | `state_lookup` Texas → `respond` | 3.2 s | 3,640 / 927 (226) | $0.0082 | PASS: TX; fixed Spanish 911-first text |
+| g · photo | street-sign photo: "Franklin St / Johnstown, Cambria County, PA" | `state_lookup` Pennsylvania → `respond` | 2.6 s | 5,271 / 493 (4,578) | $0.0036 | PASS: reads the signs, PA |
+| g2 · photo, ambiguous | street-sign photo: "Franklin St" only | `respond` | 2.6 s | 2,316 / 912 (0) | $0.0068 | PASS: asks for the state, cites nothing |
+| f · Spanish | "¿Dónde consigo naloxona gratis en Texas?" | `state_lookup` Texas → `respond` | 2.7 s | 3,642 / 593 (3,042) | $0.0037 | PASS: answers in Spanish |
 
-Agent answers: **median 2.6 s and $0.0049 per answer**. Across all 39 live smoke answers that day, the fact checker removed **0** unverified details and **0** made-up ids. For the same Johnstown question, the no-tools baseline wrote between 27 and 35 details the dataset can't back up, over four runs. "Unverified" means we can't confirm them; some may be real. The photos are synthetic signs in [tests/fixtures/](tests/fixtures/). In the browser, the widget shrank a 1800×1280 photo to 1024×728 before sending it. All live testing that day cost $0.38.
+Agent answers: **median 2.8 s and $0.0052 per answer**. Across all 49 live smoke answers that day, the fact checker removed **0** unverified details and **0** made-up ids. For the same Johnstown question, the no-tools baseline wrote 27–35 details the dataset can't back up, over five runs. "Unverified" means we can't confirm them; some may be real. The photos are synthetic signs in [tests/fixtures/](tests/fixtures/). In the browser, the widget shrank a 1800×1280 photo to 1024×728 before sending it. All live testing that day cost $0.45.
 
 Bugs the live runs found, all fixed and covered by unit tests and smoke checks:
 - The model sent the text `"null"` as the map query, rendering "Pharmacies near null".

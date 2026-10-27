@@ -1,0 +1,593 @@
+{
+  "model": "muse-spark-1.3",
+  "reasoning_effort": "low",
+  "total_usd": 0.06738835,
+  "results": [
+    {
+      "id": "a-baseline-no-tools",
+      "text": "near the mcdonalds on franklin st in johnstown",
+      "model": "muse-spark-1.3",
+      "latency_ms": 9978,
+      "usage": {
+        "completion_tokens": 2387,
+        "prompt_tokens": 42,
+        "total_tokens": 2429,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1395
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost_usd": 0.01019725,
+      "unverified": [
+        {
+          "kind": "phone",
+          "value": "814-536-4713"
+        },
+        {
+          "kind": "phone",
+          "value": "814-536-2020"
+        },
+        {
+          "kind": "phone",
+          "value": "814-262-9502"
+        },
+        {
+          "kind": "phone",
+          "value": "1-877-268-9463"
+        },
+        {
+          "kind": "phone",
+          "value": "814-472-5772"
+        },
+        {
+          "kind": "phone",
+          "value": "814-534-9000"
+        },
+        {
+          "kind": "phone",
+          "value": "814-533-3141"
+        },
+        {
+          "kind": "hours",
+          "value": "9am"
+        },
+        {
+          "kind": "hours",
+          "value": "9pm"
+        },
+        {
+          "kind": "hours",
+          "value": "9am"
+        },
+        {
+          "kind": "hours",
+          "value": "6pm"
+        },
+        {
+          "kind": "hours",
+          "value": "10am"
+        },
+        {
+          "kind": "hours",
+          "value": "6pm"
+        },
+        {
+          "kind": "hours",
+          "value": "2pm"
+        },
+        {
+          "kind": "hours",
+          "value": "9am"
+        },
+        {
+          "kind": "hours",
+          "value": "6pm"
+        },
+        {
+          "kind": "hours",
+          "value": "9am"
+        },
+        {
+          "kind": "hours",
+          "value": "1pm"
+        },
+        {
+          "kind": "hours",
+          "value": "8:30am"
+        },
+        {
+          "kind": "hours",
+          "value": "4:30pm"
+        },
+        {
+          "kind": "hours",
+          "value": "8:30am"
+        },
+        {
+          "kind": "hours",
+          "value": "4:30pm"
+        },
+        {
+          "kind": "hours",
+          "value": "Open 24/7"
+        },
+        {
+          "kind": "hours",
+          "value": "8:30am"
+        },
+        {
+          "kind": "hours",
+          "value": "4:30pm"
+        },
+        {
+          "kind": "address",
+          "value": "523 Franklin St"
+        },
+        {
+          "kind": "address",
+          "value": "511 Franklin St"
+        },
+        {
+          "kind": "address",
+          "value": "123 Market St"
+        },
+        {
+          "kind": "address",
+          "value": "445 Schoolhouse Rd"
+        },
+        {
+          "kind": "address",
+          "value": "1086 Franklin St"
+        },
+        {
+          "kind": "address",
+          "value": "184 Donald Lane"
+        }
+      ],
+      "excerpt": "Near that McDonald's - 523 Franklin St, Johnstown, PA 15905 - you are in downtown Johnstown, and there are several places within 1 mile that give out **free naloxone / Narcan** with no prescription needed under Pennsylvania's standing order / Act 139.\n\nCall ahead before you go - free kit supplies and hours change often.\n\n### 1. Closest - Pharmacy with PA Standing Order\n**Rite Aid Pharmacy #11038 -"
+    },
+    {
+      "id": "b-messy-with-tools",
+      "text": "near the mcdonalds on franklin st in johnstown",
+      "pass": true,
+      "notes": [],
+      "state": "PA",
+      "cards": [
+        "PA-mail-1",
+        "PA-community-1",
+        "PA-pharmacy"
+      ],
+      "clarify": [
+        {
+          "label": "Johnstown, PA",
+          "state": "PA"
+        },
+        {
+          "label": "Johnstown, NY",
+          "state": "NY"
+        },
+        {
+          "label": "Johnstown, OH",
+          "state": "OH"
+        }
+      ],
+      "maps": "Pharmacies near Franklin St, Johnstown, PA",
+      "message": "There are a few places called Johnstown, so I pulled Pennsylvania options below as the most likely match. Tap your state below if that's wrong. Free mail and community options are listed, plus pharmacies with no prescription.",
+      "guard": {
+        "removed": [],
+        "dropped_ids": []
+      },
+      "meta": {
+        "model": "muse-spark-1.3",
+        "calls": 2,
+        "trace": [
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "Pennsylvania"
+            },
+            "found": true
+          },
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "New York"
+            },
+            "found": true
+          },
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "Ohio"
+            },
+            "found": true
+          },
+          {
+            "tool": "respond"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 4688,
+          "cached_tokens": 1521,
+          "completion_tokens": 915
+        },
+        "cost_usd": 0.00807565,
+        "latency_ms": 4365
+      }
+    },
+    {
+      "id": "b2-clarified",
+      "text": "Johnstown, PA",
+      "pass": true,
+      "notes": [],
+      "state": "PA",
+      "cards": [
+        "PA-mail-1",
+        "PA-community-1",
+        "PA-pharmacy"
+      ],
+      "clarify": [],
+      "maps": "Pharmacies near Franklin St, Johnstown, PA",
+      "message": "Here are free naloxone options around Johnstown listed below. Hours and stock are not listed, so please call ahead to confirm. Tap below for mail and local details, or pharmacies near Franklin St.",
+      "guard": {
+        "removed": [],
+        "dropped_ids": []
+      },
+      "meta": {
+        "model": "muse-spark-1.3",
+        "calls": 2,
+        "trace": [
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "PA"
+            },
+            "found": true
+          },
+          {
+            "tool": "respond"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3792,
+          "cached_tokens": 3042,
+          "completion_tokens": 1007
+        },
+        "cost_usd": 0.00567355,
+        "latency_ms": 3774
+      }
+    },
+    {
+      "id": "c-nonsense",
+      "text": "where can i get narcan by the big purple rock on zxqv lane",
+      "pass": true,
+      "notes": [],
+      "state": null,
+      "cards": [],
+      "clarify": [],
+      "maps": null,
+      "message": "I couldn't find that location. Which state are you in? Tell me the state and I'll list Narcan options near you.",
+      "guard": {
+        "removed": [],
+        "dropped_ids": []
+      },
+      "meta": {
+        "model": "muse-spark-1.3",
+        "calls": 1,
+        "trace": [
+          {
+            "tool": "respond"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1570,
+          "cached_tokens": 0,
+          "completion_tokens": 642
+        },
+        "cost_usd": 0.004691,
+        "latency_ms": 1891
+      }
+    },
+    {
+      "id": "c2-out-of-area",
+      "text": "I'm in Toronto, where's free naloxone?",
+      "pass": true,
+      "notes": [],
+      "state": null,
+      "cards": [],
+      "clarify": [],
+      "maps": null,
+      "message": "I only cover the 50 US states, so I can't list options for Toronto, Canada. Please contact a local pharmacy or public health service there for free naloxone.",
+      "guard": {
+        "removed": [],
+        "dropped_ids": []
+      },
+      "meta": {
+        "model": "muse-spark-1.3",
+        "calls": 1,
+        "trace": [
+          {
+            "tool": "respond"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1566,
+          "cached_tokens": 1521,
+          "completion_tokens": 864
+        },
+        "cost_usd": 0.0039564,
+        "latency_ms": 2737
+      }
+    },
+    {
+      "id": "d-ohio-demo",
+      "text": "I'm in Ohio, where's free Narcan near me tonight?",
+      "pass": true,
+      "notes": [],
+      "state": "OH",
+      "cards": [
+        "OH-community-1",
+        "OH-pharmacy",
+        "OH-mail-1"
+      ],
+      "clarify": [],
+      "maps": "Pharmacies near you",
+      "message": "Hours are not listed, so call ahead to confirm for tonight. Free statewide and mail options plus pharmacy access are listed below. Tap the map for pharmacies near you.",
+      "guard": {
+        "removed": [],
+        "dropped_ids": []
+      },
+      "meta": {
+        "model": "muse-spark-1.3",
+        "calls": 2,
+        "trace": [
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "Ohio"
+            },
+            "found": true
+          },
+          {
+            "tool": "respond"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3659,
+          "cached_tokens": 3042,
+          "completion_tokens": 825
+        },
+        "cost_usd": 0.0047338,
+        "latency_ms": 2870
+      }
+    },
+    {
+      "id": "e-emergency",
+      "text": "my brother won't wake up, we're in Dayton",
+      "pass": true,
+      "notes": [],
+      "state": "OH",
+      "cards": [
+        "OH-community-1",
+        "OH-pharmacy",
+        "OH-mail-1"
+      ],
+      "clarify": [
+        {
+          "label": "Dayton, Ohio",
+          "state": "OH"
+        },
+        {
+          "label": "Dayton, Kentucky",
+          "state": "KY"
+        },
+        {
+          "label": "Dayton, Tennessee",
+          "state": "TN"
+        }
+      ],
+      "maps": "Pharmacies near Dayton, OH",
+      "message": "Call 911 now. Free and low-cost naloxone options for Ohio are listed below. Not the right place? Tap yours below.",
+      "guard": {
+        "removed": [],
+        "dropped_ids": []
+      },
+      "meta": {
+        "model": "muse-spark-1.3",
+        "calls": 2,
+        "trace": [
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "Ohio"
+            },
+            "found": true
+          },
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "Kentucky"
+            },
+            "found": true
+          },
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "Tennessee"
+            },
+            "found": true
+          },
+          {
+            "tool": "respond"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 4668,
+          "cached_tokens": 3042,
+          "completion_tokens": 1220
+        },
+        "cost_usd": 0.0076738,
+        "latency_ms": 4004
+      }
+    },
+    {
+      "id": "e2-emergency-es",
+      "text": "mi amigo no responde, estamos en Houston",
+      "pass": true,
+      "notes": [],
+      "state": "TX",
+      "cards": [
+        "TX-community-2",
+        "TX-mail-1",
+        "TX-pharmacy"
+      ],
+      "clarify": [],
+      "maps": "Pharmacies near Houston, TX",
+      "message": "Llama al 911 ahora. Abajo están las opciones de naloxona gratis o de bajo costo en Texas.",
+      "guard": {
+        "removed": [],
+        "dropped_ids": []
+      },
+      "meta": {
+        "model": "muse-spark-1.3",
+        "calls": 2,
+        "trace": [
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "Texas"
+            },
+            "found": true
+          },
+          {
+            "tool": "respond"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3640,
+          "cached_tokens": 226,
+          "completion_tokens": 927
+        },
+        "cost_usd": 0.00824115,
+        "latency_ms": 3166
+      }
+    },
+    {
+      "id": "g-photo-pa",
+      "text": "",
+      "pass": true,
+      "notes": [],
+      "state": "PA",
+      "cards": [
+        "PA-mail-1",
+        "PA-community-1",
+        "PA-pharmacy"
+      ],
+      "clarify": [],
+      "maps": "Pharmacies near Franklin St, Johnstown, PA",
+      "message": "You're in Johnstown, Cambria County, PA. I found Pennsylvania naloxone options for you. Free mail and community kits are listed below, plus pharmacies with no prescription needed.",
+      "guard": {
+        "removed": [],
+        "dropped_ids": []
+      },
+      "meta": {
+        "model": "muse-spark-1.3",
+        "calls": 2,
+        "trace": [
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "Pennsylvania"
+            },
+            "found": true
+          },
+          {
+            "tool": "respond"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 5271,
+          "cached_tokens": 4578,
+          "completion_tokens": 493
+        },
+        "cost_usd": 0.0036482,
+        "latency_ms": 2634
+      }
+    },
+    {
+      "id": "g2-photo-ambiguous",
+      "text": "",
+      "pass": true,
+      "notes": [],
+      "state": null,
+      "cards": [],
+      "clarify": [],
+      "maps": null,
+      "message": "I see Franklin St in your photo, but that street is in many states. Which state are you in so I can find naloxone options for you?",
+      "guard": {
+        "removed": [],
+        "dropped_ids": []
+      },
+      "meta": {
+        "model": "muse-spark-1.3",
+        "calls": 1,
+        "trace": [
+          {
+            "tool": "respond"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2316,
+          "cached_tokens": 0,
+          "completion_tokens": 912
+        },
+        "cost_usd": 0.006771,
+        "latency_ms": 2633
+      }
+    },
+    {
+      "id": "f-spanish",
+      "text": "¿Dónde consigo naloxona gratis en Texas?",
+      "pass": true,
+      "notes": [],
+      "state": "TX",
+      "cards": [
+        "TX-mail-1",
+        "TX-community-2",
+        "TX-community-1"
+      ],
+      "clarify": [],
+      "maps": "Pharmacies near you",
+      "message": "En Texas puedes pedir naloxona gratis por correo y en programas comunitarios. Las opciones están abajo. Las farmacias también la dan sin receta en la mayoría de los casos.",
+      "guard": {
+        "removed": [],
+        "dropped_ids": []
+      },
+      "meta": {
+        "model": "muse-spark-1.3",
+        "calls": 2,
+        "trace": [
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "Texas"
+            },
+            "found": true
+          },
+          {
+            "tool": "respond"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3642,
+          "cached_tokens": 3042,
+          "completion_tokens": 593
+        },
+        "cost_usd": 0.0037265500000000003,
+        "latency_ms": 2704
+      }
+    }
+  ]
+}

@@ -3,9 +3,9 @@
   "entries": [
     {
       "prompt": "near the mcdonalds on franklin st in johnstown",
-      "recorded_at": "2026-10-27T10:16:49.155Z",
+      "recorded_at": "2026-10-27T10:29:16.952Z",
       "answer": {
-        "message": "There are a few places called Johnstown, so I listed free options for Johnstown, PA below. Hours are not listed, so call ahead. If you're in another state, tap the right one below.",
+        "message": "There are a few places called Johnstown, so I pulled Pennsylvania options below as the most likely match. Tap your state below if that's wrong. Free mail and community options are listed, plus pharmacies with no prescription.",
         "state": {
           "name": "Pennsylvania",
           "abbreviation": "PA",
@@ -72,21 +72,21 @@
             {
               "tool": "state_lookup",
               "args": {
-                "state": "PA"
+                "state": "Pennsylvania"
               },
               "found": true
             },
             {
               "tool": "state_lookup",
               "args": {
-                "state": "NY"
+                "state": "New York"
               },
               "found": true
             },
             {
               "tool": "state_lookup",
               "args": {
-                "state": "OH"
+                "state": "Ohio"
               },
               "found": true
             },
@@ -95,20 +95,20 @@
             }
           ],
           "usage": {
-            "prompt_tokens": 4689,
-            "cached_tokens": 3042,
-            "completion_tokens": 841
+            "prompt_tokens": 4688,
+            "cached_tokens": 1521,
+            "completion_tokens": 915
           },
-          "cost_usd": 0.006089299999999999,
-          "latency_ms": 3056
+          "cost_usd": 0.00807565,
+          "latency_ms": 4365
         }
       }
     },
     {
       "prompt": "I'm in Ohio, where's free Narcan near me tonight?",
-      "recorded_at": "2026-10-27T10:17:00.554Z",
+      "recorded_at": "2026-10-27T10:29:28.225Z",
       "answer": {
-        "message": "Free options are listed below, including Project DAWN sites statewide. Hours are not listed, so call ahead to confirm for tonight. Pharmacies can also dispense without a prescription, and mail order is free.",
+        "message": "Hours are not listed, so call ahead to confirm for tonight. Free statewide and mail options plus pharmacy access are listed below. Tap the map for pharmacies near you.",
         "state": {
           "name": "Ohio",
           "abbreviation": "OH",
@@ -172,20 +172,20 @@
             }
           ],
           "usage": {
-            "prompt_tokens": 3656,
+            "prompt_tokens": 3659,
             "cached_tokens": 3042,
-            "completion_tokens": 739
+            "completion_tokens": 825
           },
-          "cost_usd": 0.00436455,
-          "latency_ms": 2513
+          "cost_usd": 0.0047338,
+          "latency_ms": 2870
         }
       }
     },
     {
       "prompt": "¿Dónde consigo naloxona gratis en Texas?",
-      "recorded_at": "2026-10-27T10:17:14.171Z",
+      "recorded_at": "2026-10-27T10:29:43.376Z",
       "answer": {
-        "message": "En Texas puedes pedir naloxona gratis por correo o recogerla en programas comunitarios. Tienes opciones gratuitas listadas abajo. Llama antes para confirmar disponibilidad.",
+        "message": "En Texas puedes pedir naloxona gratis por correo y en programas comunitarios. Las opciones están abajo. Las farmacias también la dan sin receta en la mayoría de los casos.",
         "state": {
           "name": "Texas",
           "abbreviation": "TX",
@@ -200,18 +200,18 @@
         },
         "cards": [
           {
-            "id": "TX-community-2",
-            "kind": "community",
-            "name": "Naloxone Texas",
-            "services": "Free naloxone + training, mail order, 10 regional hubs",
-            "website": "https://naloxonetexas.com/"
-          },
-          {
             "id": "TX-mail-1",
             "kind": "mail",
             "name": "NEXT Distro",
             "cost": "Free",
             "website": "https://nextdistro.org/texas"
+          },
+          {
+            "id": "TX-community-2",
+            "kind": "community",
+            "name": "Naloxone Texas",
+            "services": "Free naloxone + training, mail order, 10 regional hubs",
+            "website": "https://naloxonetexas.com/"
           },
           {
             "id": "TX-community-1",
@@ -247,12 +247,12 @@
             }
           ],
           "usage": {
-            "prompt_tokens": 3640,
+            "prompt_tokens": 3642,
             "cached_tokens": 3042,
-            "completion_tokens": 747
+            "completion_tokens": 593
           },
-          "cost_usd": 0.00437855,
-          "latency_ms": 2458
+          "cost_usd": 0.0037265500000000003,
+          "latency_ms": 2704
         }
       }
     }
