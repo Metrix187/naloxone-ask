@@ -1,1 +1,254 @@
-{"note":"Populated by npm run smoke -- --record. Empty until the first live run.","entries":[]}
+{
+  "note": "Recorded live answers replayed (and labeled) only when the live API is unavailable.",
+  "entries": [
+    {
+      "prompt": "near the mcdonalds on franklin st in johnstown",
+      "recorded_at": "2026-10-27T10:01:58.348Z",
+      "answer": {
+        "message": "I found a few Johnstowns, so I'm showing Pennsylvania first as the most likely. Tap your state below if that's wrong. Hours aren't listed, so please call ahead and use the map for pharmacies near Franklin St.",
+        "state": {
+          "name": "Pennsylvania",
+          "abbreviation": "PA",
+          "last_updated": "2026-09-12",
+          "sources": [
+            "https://www.pa.gov/agencies/health/programs/opioids/naloxone",
+            "https://www.pa.gov/services/ddap/get-overdose-prevention-supplies-for-individuals",
+            "https://nextdistro.org/pachoice"
+          ],
+          "quickest_route": "Walk into a participating pharmacy and use the statewide standing order or buy OTC; request a free kit via the statewide Mail-to-Home Naloxone Program operated with Prevention Point Pittsburgh and NEXT Distro; or obtain no-cost naloxone from local Overdose Prevention Program and other community partners."
+        },
+        "cards": [
+          {
+            "id": "PA-mail-1",
+            "kind": "mail",
+            "name": "NEXT Distro / PPP",
+            "cost": "Free",
+            "website": "https://nextdistro.org/pennsylvania"
+          },
+          {
+            "id": "PA-community-1",
+            "kind": "community",
+            "name": "Prevention Point Pittsburgh",
+            "services": "Mail-to-home kits",
+            "website": "https://pppgh.org",
+            "phone": "412-247-3404"
+          },
+          {
+            "id": "PA-pharmacy",
+            "kind": "pharmacy",
+            "name": "Pharmacy (no prescription needed in most cases)",
+            "mechanism": "Statewide standing order and OTC. Pharmacies dispense under the standing order or sell it over the counter, and the standing order can be used for insurance coverage.",
+            "typical_cost": "OTC ~$40-50 cash for a two-dose box; often ~$44 with a GoodRx-style discount.",
+            "medicaid": "Covered. PA Medical Assistance (fee-for-service and managed care) pays with no prior authorization and no quantity limit when billed under the standing order."
+          }
+        ],
+        "maps": {
+          "label": "Pharmacies near Franklin St, Johnstown, PA",
+          "url": "https://www.google.com/maps/search/?api=1&query=pharmacy%20near%20Franklin%20St%2C%20Johnstown%2C%20PA"
+        },
+        "clarify": [
+          {
+            "label": "Johnstown, PA",
+            "state": "PA"
+          },
+          {
+            "label": "Johnstown, NY",
+            "state": "NY"
+          },
+          {
+            "label": "Johnstown, OH",
+            "state": "OH"
+          }
+        ],
+        "out_of_coverage": false,
+        "guard": {
+          "removed": [],
+          "dropped_ids": []
+        },
+        "meta": {
+          "model": "muse-spark-1.3",
+          "calls": 2,
+          "trace": [
+            {
+              "tool": "state_lookup",
+              "args": {
+                "state": "PA"
+              },
+              "found": true
+            },
+            {
+              "tool": "state_lookup",
+              "args": {
+                "state": "NY"
+              },
+              "found": true
+            },
+            {
+              "tool": "state_lookup",
+              "args": {
+                "state": "OH"
+              },
+              "found": true
+            },
+            {
+              "tool": "respond"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 4575,
+            "cached_tokens": 0,
+            "completion_tokens": 865
+          },
+          "cost_usd": 0.009395,
+          "latency_ms": 3638
+        }
+      }
+    },
+    {
+      "prompt": "I'm in Ohio, where's free Narcan near me tonight?",
+      "recorded_at": "2026-10-27T10:02:07.582Z",
+      "answer": {
+        "message": "I found free options in Ohio for you. Hours aren't listed, so call ahead to check availability for tonight. Pharmacies can also provide it without a prescription.",
+        "state": {
+          "name": "Ohio",
+          "abbreviation": "OH",
+          "last_updated": "2026-09-08",
+          "sources": [
+            "https://odh.ohio.gov/know-our-programs/project-dawn/",
+            "https://odh.ohio.gov/know-our-programs/oh-against-od/good-samaritan-law/call-no-matter-what",
+            "https://www.pharmacy.ohio.gov/naloxone",
+            "https://www.harmreductionohio.org/order-naloxone-free-from-harm-reduction-ohio/",
+            "https://nextdistro.org/ohio"
+          ],
+          "quickest_route": "Project DAWN site or Pharmacy."
+        },
+        "cards": [
+          {
+            "id": "OH-community-1",
+            "kind": "community",
+            "name": "Project DAWN",
+            "services": "Free statewide distribution",
+            "website": "https://odh.ohio.gov/know-our-programs/project-dawn/"
+          },
+          {
+            "id": "OH-mail-1",
+            "kind": "mail",
+            "name": "Harm Reduction Ohio",
+            "cost": "Free",
+            "website": "https://nextdistro.org/hro"
+          },
+          {
+            "id": "OH-pharmacy",
+            "kind": "pharmacy",
+            "name": "Pharmacy (no prescription needed in most cases)",
+            "mechanism": "Pharmacy protocol, no prescription.",
+            "typical_cost": "OTC ~$45",
+            "medicaid": "Covered."
+          }
+        ],
+        "maps": null,
+        "clarify": [],
+        "out_of_coverage": false,
+        "guard": {
+          "removed": [],
+          "dropped_ids": []
+        },
+        "meta": {
+          "model": "muse-spark-1.3",
+          "calls": 2,
+          "trace": [
+            {
+              "tool": "state_lookup",
+              "args": {
+                "state": "Ohio"
+              },
+              "found": true
+            },
+            {
+              "tool": "respond"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 3541,
+            "cached_tokens": 113,
+            "completion_tokens": 530
+          },
+          "cost_usd": 0.00655445,
+          "latency_ms": 2282
+        }
+      }
+    },
+    {
+      "prompt": "¿Dónde consigo naloxona gratis en Texas?",
+      "recorded_at": "2026-10-27T10:02:14.872Z",
+      "answer": {
+        "message": "En Texas puedes conseguir naloxona gratis por correo y en programas comunitarios. Toca una opción para ver cómo pedirla y llama antes para confirmar. Si es una emergencia por sobredosis, llama al 911.",
+        "state": {
+          "name": "Texas",
+          "abbreviation": "TX",
+          "last_updated": "2026-09-12",
+          "sources": [
+            "https://naloxonetexas.com/",
+            "https://nextdistro.org/texas",
+            "https://bewelltexas.org",
+            "https://www.texastribune.org/2024/05/30/texas-hhsc-narcan-distribution/"
+          ],
+          "quickest_route": "More Narcan Please shut down Feb 2024. Free mail + 10 regional hubs now at Naloxone Texas (naloxonetexas.com), or pharmacy standing order."
+        },
+        "cards": [
+          {
+            "id": "TX-community-2",
+            "kind": "community",
+            "name": "Naloxone Texas",
+            "services": "Free naloxone + training, mail order, 10 regional hubs",
+            "website": "https://naloxonetexas.com/"
+          },
+          {
+            "id": "TX-mail-1",
+            "kind": "mail",
+            "name": "NEXT Distro",
+            "cost": "Free",
+            "website": "https://nextdistro.org/texas"
+          },
+          {
+            "id": "TX-community-1",
+            "kind": "community",
+            "name": "Texas Targeted Opioid Response",
+            "services": "Community distribution",
+            "website": "https://txopioidresponse.org/"
+          }
+        ],
+        "maps": null,
+        "clarify": [],
+        "out_of_coverage": false,
+        "guard": {
+          "removed": [],
+          "dropped_ids": []
+        },
+        "meta": {
+          "model": "muse-spark-1.3",
+          "calls": 2,
+          "trace": [
+            {
+              "tool": "state_lookup",
+              "args": {
+                "state": "Texas"
+              },
+              "found": true
+            },
+            {
+              "tool": "respond"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 3524,
+            "cached_tokens": 1393,
+            "completion_tokens": 626
+          },
+          "cost_usd": 0.005533199999999999,
+          "latency_ms": 2157
+        }
+      }
+    }
+  ]
+}

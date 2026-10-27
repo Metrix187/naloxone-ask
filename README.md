@@ -89,7 +89,7 @@ Requires Node 22.9+ and no npm dependencies.
 
 ```bash
 git clone <this repo> && cd naloxone-ask
-npm test                 # 15 network-free tests (guardrails, tool loop with a fake API, fallback)
+npm test                 # 16 network-free tests (guardrails, tool loop with a fake API, fallback)
 npm run offline          # http://localhost:8787 with no API key: labeled offline/cached mode
 ```
 
@@ -109,7 +109,22 @@ Standard-mode prices (verified 2026-10-27): **$1.25 / 1M input, $0.15 / 1M cache
 
 Measured numbers: see [tests/results/](tests/results/) and the table below (filled from `npm run smoke`).
 
-<!-- SMOKE_TABLE -->
+Live run, 2026-10-27, `muse-spark-1.3` (Standard mode), `reasoning_effort: "low"` ([raw results](tests/results/smoke-2026-10-27T10-02-14-872Z.json)):
+
+| Probe | Input | Tool calls | Latency | Tokens in / out (cached) | Cost | Result |
+|---|---|---|---|---|---|---|
+| a · baseline, no tools | Johnstown question, asking for addresses, hours, phones | none | 9.6 s | 42 / 2,500 (0) | $0.0107 | **27 unverified details** (6 phone numbers, 5 street addresses, 16 opening times) |
+| b · messy | "near the mcdonalds on franklin st in johnstown" | `state_lookup` PA, NY, OH in parallel → `respond` | 3.6 s | 4,575 / 865 (0) | $0.0094 | PASS: PA + 3 clarify chips + map link |
+| b2 · clarified | "Johnstown, PA" (follow-up) | `state_lookup` PA → `respond` | 2.8 s | 3,678 / 753 (1,393) | $0.0063 | PASS: PA, no chips |
+| c · nonsense | "the big purple rock on zxqv lane" | `respond` | 2.1 s | 1,512 / 531 (0) | $0.0042 | PASS: asks for the state, cites nothing |
+| c2 · out of area | "I'm in Toronto" | `respond` | 2.1 s | 1,508 / 615 (0) | $0.0045 | PASS: says US-only, cites nothing |
+| d · Ohio demo | "I'm in Ohio, where's free Narcan near me tonight?" | `state_lookup` OH → `respond` | 2.3 s | 3,541 / 530 (113) | $0.0066 | PASS: says hours aren't listed |
+| e · emergency | "my brother won't wake up, we're in Dayton" | `state_lookup` OH, TX, TN + `crisis_resources` → `respond` | 5.1 s | 4,879 / 1,450 (0) | $0.0123 | PASS: first sentence is 911 |
+| f · Spanish | "¿Dónde consigo naloxona gratis en Texas?" | `state_lookup` TX → `respond` | 2.2 s | 3,524 / 626 (1,393) | $0.0055 | PASS: answers in Spanish |
+
+Agent answers: **median 2.3 s and $0.0063 per answer**. Across both live runs that day (14 agent answers), the fact checker removed **0** unverified details and **0** made-up ids. The no-tools baseline wrote 32 and then 27 details for the same question that the dataset can't back up. "Unverified" means we can't confirm them; some may be real. Both runs together cost $0.12.
+
+The first run found two bugs, which were fixed before this run: the model sent the text `"null"` as the map query, and it asked "which Johnstown?" after the person had already said PA. Both are now covered by unit tests and smoke checks.
 
 ## Data
 

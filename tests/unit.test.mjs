@@ -68,6 +68,15 @@ test('buildAnswer drops ids from states the tools never returned', () => {
   assert.deepEqual(a.clarify, [{ label: 'Johnstown, NY', state: 'NY' }]);
 });
 
+test('buildAnswer: no "null" map link, no clarify chips once the state is named', () => {
+  const a = buildAnswer(
+    { message: 'ok', state: 'PA', highlight_ids: ['PA-mail-1'], maps_query: 'null', clarify_options: [{ label: 'Johnstown, NY', state: 'NY' }], out_of_coverage: false },
+    { lookedUp: new Set(['PA', 'NY']), userText: 'Johnstown, PA' },
+  );
+  assert.equal(a.maps, null);
+  assert.deepEqual(a.clarify, []);
+});
+
 test('buildAnswer will not show a state the model never looked up', () => {
   const a = buildAnswer({ message: 'x', state: 'OH', highlight_ids: [], maps_query: 'x' }, { lookedUp: new Set(), userText: '' });
   assert.equal(a.state, null);

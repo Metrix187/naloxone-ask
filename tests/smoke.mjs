@@ -23,7 +23,7 @@ const MESSY = 'near the mcdonalds on franklin st in johnstown';
 const PROBES = [
   { id: 'a-baseline-no-tools', text: MESSY, baseline: true },
   { id: 'b-messy-with-tools', text: MESSY, record: true, expect: { anyState: ['PA', 'NY', 'OH', 'CO'], lookups: true } },
-  { id: 'b2-clarified', text: 'Johnstown, PA', history: [{ role: 'user', content: MESSY }], expect: { state: 'PA', lookups: true } },
+  { id: 'b2-clarified', text: 'Johnstown, PA', history: [{ role: 'user', content: MESSY }], expect: { state: 'PA', lookups: true, noClarify: true } },
   { id: 'c-nonsense', text: 'where can i get narcan by the big purple rock on zxqv lane', expect: { noCards: true } },
   { id: 'c2-out-of-area', text: "I'm in Toronto, where's free naloxone?", expect: { noCards: true } },
   { id: 'd-ohio-demo', text: "I'm in Ohio, where's free Narcan near me tonight?", record: true, expect: { state: 'OH', lookups: true } },
@@ -58,6 +58,8 @@ function verdict(p, r) {
   if (e.anyState && !e.anyState.includes(r.state?.abbreviation) && !r.clarify.length) fails.push('no state and no clarify');
   if (e.noCards && r.cards.some((c) => !c.id.startsWith('crisis-'))) fails.push('cited a source for an unresolvable place');
   if (e.emergency && !triage(p.text)) fails.push('triage missed emergency');
+  if (e.noClarify && r.clarify.length) fails.push('asked which state after the person named it');
+  if (/\bnull\b/i.test(r.maps?.label || '')) fails.push('map link says "null"');
   if (r.guard.removed.length) fails.push(`guard removed ${r.guard.removed.length} unverified detail(s)`); // informational: means the model tried
   return fails;
 }
