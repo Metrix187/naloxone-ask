@@ -28,6 +28,16 @@ A chat widget, mobile-first, with one input:
 - **Give medical advice.** No dosing, no diagnosis, no "they'll be fine".
 - **Run on Contributor mode.** See [Privacy](#privacy).
 
+### Screenshots
+
+Live mode on `muse-spark-1.3` (Standard), mobile viewport, 2026-10-27. Shot 6 is the server running with no model access.
+
+| 1 · Start | 2 · Ohio | 3 · Messy Johnstown |
+|---|---|---|
+| ![Empty widget with three example questions and the crisis bar](docs/screenshots/1-start.png) | ![Ohio answer saying hours aren't listed, with Project DAWN](docs/screenshots/2-ohio.png) | ![Johnstown answer for Pennsylvania with free mail kits](docs/screenshots/3-johnstown.png) |
+| **4 · How this answer was made** | **5 · Emergency** | **6 · Offline fallback** |
+| ![Map link, Johnstown PA/NY/OH chips, tool trace, Standard mode, cost, fact-check count](docs/screenshots/4-how-it-worked.png) | ![Call 911 banner and a 911-first answer](docs/screenshots/5-emergency.png) | ![Labeled recorded answer shown while the live assistant is unavailable](docs/screenshots/6-offline-fallback.png) |
+
 ---
 
 ## Architecture
