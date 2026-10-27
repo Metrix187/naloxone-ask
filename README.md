@@ -91,7 +91,7 @@ What happens to a question, exactly:
 | IP address | Held in memory for 60 seconds for rate limiting, never written. The hosting provider may keep its own standard access logs. |
 | Photos | Downscaled and re-encoded in the browser (removes EXIF, including GPS), sent once, never stored by us. |
 | Not covered | Meta's own operational/abuse logging is governed by Meta's terms. We don't claim zero retention on Meta's side. |
-| Maps link | Only if tapped. It opens Google Maps with the place phrase. |
+| Maps link | Only if tapped. It opens Google Maps with the place phrase from the person's words. If they named no place, "Pharmacies near you" searches "pharmacy near me", which uses their location only if they allow it in Maps. |
 
 ## Run it
 

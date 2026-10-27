@@ -49,7 +49,7 @@
       <summary>Private: no account, nothing stored. <span class="link">What's sent?</span></summary>
       <p>Your question (and a photo, if you add one) goes from our server to Meta's Muse Spark model on Meta Model API in <b>Standard mode</b>. Meta says Standard mode content is not used to train its models. We use Meta's stateless Chat Completions endpoint, which Meta documents as not keeping conversation state between requests.</p>
       <p>narcan.delivery stores nothing: no database, no cookies, no analytics. Our server log records only timing, token counts and cost, never your words. The conversation lives in this tab and is gone when you close it. Photos are resized in your browser first, which also strips location metadata.</p>
-      <p>To stop abuse, your IP address is kept in memory for one minute to count requests, and it's never written down. Our hosting provider may keep standard access logs (IP and time, not your question). We don't control Meta's own operational logging. See Meta's terms. Tapping a "Pharmacies near…" link opens Google Maps with that place phrase.</p>
+      <p>To stop abuse, your IP address is kept in memory for one minute to count requests, and it's never written down. Our hosting provider may keep standard access logs (IP and time, not your question). We don't control Meta's own operational logging. See Meta's terms. Tapping a "Pharmacies near…" link opens Google Maps with that place phrase. "Pharmacies near you" searches near your location only if you let Maps use it.</p>
       <button type="button" class="link" id="clear">Clear this conversation</button>
     </details>
   </form>
