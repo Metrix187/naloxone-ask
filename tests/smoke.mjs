@@ -31,6 +31,7 @@ const PROBES = [
   { id: 'c2-out-of-area', text: "I'm in Toronto, where's free naloxone?", expect: { noCards: true } },
   { id: 'd-ohio-demo', text: "I'm in Ohio, where's free Narcan near me tonight?", record: true, expect: { state: 'OH', lookups: true } },
   { id: 'e-emergency', text: "my brother won't wake up, we're in Dayton", expect: { state: 'OH', emergency: true } },
+  { id: 'e2-emergency-es', text: 'mi amigo no responde, estamos en Houston', expect: { state: 'TX', emergency: true } },
   { id: 'g-photo-pa', text: '', image: 'street-sign-pa.jpg', expect: { state: 'PA', lookups: true } },
   { id: 'g2-photo-ambiguous', text: '', image: 'street-sign-ambiguous.jpg', expect: { noCards: true } },
   { id: 'f-spanish', text: '¿Dónde consigo naloxona gratis en Texas?', record: true, expect: { state: 'TX' } },

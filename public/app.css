@@ -46,6 +46,8 @@ body {
   display: flex; gap: 12px; align-items: center; justify-content: space-between;
 }
 .emergency strong { font-size: 1rem; }
+.emergency p { margin: 0; }
+.emergency span { font-size: 0.875rem; }
 
 .log { flex: 1; display: flex; flex-direction: column; gap: 12px; padding-bottom: 12px; }
 .starter { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }

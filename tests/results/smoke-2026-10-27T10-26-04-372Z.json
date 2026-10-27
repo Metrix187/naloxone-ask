@@ -1,0 +1,121 @@
+{
+  "model": "muse-spark-1.3",
+  "reasoning_effort": "low",
+  "total_usd": 0.0164926,
+  "results": [
+    {
+      "id": "e-emergency",
+      "text": "my brother won't wake up, we're in Dayton",
+      "pass": true,
+      "notes": [],
+      "state": "OH",
+      "cards": [
+        "crisis-911",
+        "OH-community-1",
+        "OH-pharmacy"
+      ],
+      "clarify": [
+        {
+          "label": "Dayton, Ohio",
+          "state": "OH"
+        },
+        {
+          "label": "Dayton, Texas",
+          "state": "TX"
+        },
+        {
+          "label": "Dayton, Tennessee",
+          "state": "TN"
+        }
+      ],
+      "maps": "Pharmacies near Dayton, OH",
+      "message": "Call 911 now. Free and low-cost naloxone options for Ohio are listed below. Not the right place? Tap yours below.",
+      "guard": {
+        "removed": [],
+        "dropped_ids": []
+      },
+      "meta": {
+        "model": "muse-spark-1.3",
+        "calls": 2,
+        "trace": [
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "Ohio"
+            },
+            "found": true
+          },
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "Texas"
+            },
+            "found": true
+          },
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "Tennessee"
+            },
+            "found": true
+          },
+          {
+            "tool": "crisis_resources"
+          },
+          {
+            "tool": "respond"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 4994,
+          "cached_tokens": 3042,
+          "completion_tokens": 1579
+        },
+        "cost_usd": 0.009607049999999999,
+        "latency_ms": 5257
+      }
+    },
+    {
+      "id": "e2-emergency-es",
+      "text": "mi amigo no responde, estamos en Houston",
+      "pass": true,
+      "notes": [],
+      "state": "TX",
+      "cards": [
+        "TX-community-2",
+        "TX-mail-1",
+        "TX-pharmacy"
+      ],
+      "clarify": [],
+      "maps": "Pharmacies near Houston, TX",
+      "message": "Llama al 911 ahora. Abajo están las opciones de naloxona gratis o de bajo costo en Texas.",
+      "guard": {
+        "removed": [],
+        "dropped_ids": []
+      },
+      "meta": {
+        "model": "muse-spark-1.3",
+        "calls": 2,
+        "trace": [
+          {
+            "tool": "state_lookup",
+            "args": {
+              "state": "Texas"
+            },
+            "found": true
+          },
+          {
+            "tool": "respond"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3643,
+          "cached_tokens": 3042,
+          "completion_tokens": 1336
+        },
+        "cost_usd": 0.006885550000000001,
+        "latency_ms": 5447
+      }
+    }
+  ]
+}

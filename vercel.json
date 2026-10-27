@@ -2,7 +2,7 @@
   "buildCommand": "",
   "outputDirectory": "public",
   "functions": {
-    "api/ask.js": { "includeFiles": "{data,fallback}/**", "maxDuration": 60 }
+    "api/ask.js": { "includeFiles": "{data/**,fallback/**,public/triage.js}", "maxDuration": 60 }
   },
   "headers": [
     {

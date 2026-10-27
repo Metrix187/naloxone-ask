@@ -51,7 +51,7 @@ createServer(async (req, res) => {
       return res.end();
     }
     const data = await readFile(file);
-    res.writeHead(200, { 'Content-Type': TYPES[extname(file)] || 'application/octet-stream', ...SECURITY_HEADERS });
+    res.writeHead(200, { 'Content-Type': TYPES[extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-cache', ...SECURITY_HEADERS });
     res.end(data);
   } catch (err) {
     const status = err.status || (err.code === 'ENOENT' ? 404 : err instanceof SyntaxError ? 400 : 500);

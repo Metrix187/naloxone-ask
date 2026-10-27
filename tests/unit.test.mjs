@@ -226,3 +226,11 @@ test('serverless adapter answers with a parsed body or a raw stream', async () =
     else process.env.FORCE_OFFLINE = prev;
   }
 });
+
+test('triage is one browser-safe module shared with the server', async () => {
+  const { readFileSync } = await import('node:fs');
+  const src = readFileSync(new URL('../public/triage.js', import.meta.url), 'utf8');
+  assert.doesNotMatch(src, /^\s*import\b/m); // the browser loads it as-is
+  const browser = await import('../public/triage.js');
+  assert.equal(browser.triage, triage); // same function the server uses
+});

@@ -2,6 +2,8 @@
 // localStorage, no cookies. Everything from the server is rendered with
 // textContent, never innerHTML.
 
+import { triage } from './triage.js';
+
 const $ = (s) => document.querySelector(s);
 const log = $('#log');
 const form = $('#ask');
@@ -13,6 +15,9 @@ let history = []; // [{role, content}] text only, sent back for follow-ups
 let pendingImage = null;
 let busy = false;
 let staticData = null; // public/states.json, loaded only if the API is unreachable
+
+// Lets screen readers pick a Spanish voice for Spanish answers.
+const looksSpanish = (s) => /[¿¡ñ]|\b(?:puedes|naloxona|gratis|llama|opciones|farmacias?|abajo)\b/i.test(s);
 
 const KIND_LABEL = { mail: 'Free by mail', community: 'Community program', pharmacy: 'Pharmacy', crisis: '24/7 line' };
 
@@ -99,7 +104,7 @@ function renderAnswer(r) {
 
   const box = el('section', { class: 'answer' });
   if (r.notice) box.append(el('p', { class: 'notice', text: r.notice }));
-  if (r.message) box.append(el('p', { class: 'bubble', text: r.message }));
+  if (r.message) box.append(el('p', { class: 'bubble', text: r.message, lang: looksSpanish(r.message) ? 'es' : 'en' }));
   if (r.state) box.append(el('p', { class: 'state-line', text: `${r.state.name} · dataset updated ${r.state.last_updated}` }));
   for (const c of r.cards || []) box.append(cardFor(c));
   if (r.maps?.url?.startsWith('https://www.google.com/maps/')) {
@@ -150,6 +155,11 @@ async function ask(text) {
   if (busy || (!text && !pendingImage)) return;
   busy = true;
   $('#starter')?.remove();
+  // Overdose in progress: show Call 911 now, before any network call.
+  if (triage(text)) {
+    $('#emergency').hidden = false;
+    $('#emergency').dataset.sticky = '1';
+  }
   const bubble = el('div', { class: 'msg-user', text: text || '(photo)' });
   if (pendingImage) bubble.append(el('img', { src: pendingImage, alt: 'Photo you sent' }));
   log.append(bubble);
